@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USERS & AUTH
+// ============================================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  irzLogin     String?  @map("irz_login")
+  irzPassEnc   String?  @map("irz_pass_enc")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  farms        Farm[]
+  sessions     Session[]
+  activityLogs ActivityLog[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  refreshToken String   @unique @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ============================================
+// FARMS & ANIMALS
+// ============================================
+
+model Farm {
+  id             String     @id @default(cuid())
+  userId         String     @map("user_id")
+  producerNumber String     @unique @map("producer_number")
+  herdNumber     String     @map("herd_number")
+  name           String?
+  address        String?
+  lastSyncAt     DateTime?  @map("last_sync_at")
+  syncStatus     SyncStatus @default(PENDING) @map("sync_status")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  animals   Animal[]
+  documents Document[]
+  syncLogs  SyncLog[]
+
+  @@map("farms")
+}
+
+model Animal {
+  id           String       @id @default(cuid())
+  farmId       String       @map("farm_id")
+  irzId        String?      @map("irz_id")
+  earTagNumber String       @map("ear_tag_number")
+  species      Species
+  breed        String?
+  gender       Gender
+  birthDate    DateTime?    @map("birth_date")
+  motherEarTag String?      @map("mother_ear_tag")
+  status       AnimalStatus @default(ACTIVE)
+  syncedAt     DateTime?    @map("synced_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  farm      Farm          @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  events    AnimalEvent[]
+  documents Document[]
+
+  @@unique([farmId, earTagNumber])
+  @@map("animals")
+}
+
+model AnimalEvent {
+  id          String    @id @default(cuid())
+  animalId    String    @map("animal_id")
+  eventType   EventType @map("event_type")
+  eventDate   DateTime  @map("event_date")
+  description String?
+  irzEventId  String?   @map("irz_event_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+
+  @@map("animal_events")
+}
+
+// ============================================
+// DOCUMENTS
+// ============================================
+
+model Document {
+  id              String         @id @default(cuid())
+  farmId          String         @map("farm_id")
+  animalId        String?        @map("animal_id")
+  type            DocumentType
+  irzDocNumber    String?        @map("irz_doc_number")
+  status          DocumentStatus @default(DRAFT)
+  formData        Json           @map("form_data")
+  pdfUrl          String?        @map("pdf_url")
+  submittedAt     DateTime?      @map("submitted_at")
+  irzResponseData Json?          @map("irz_response_data")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  farm   Farm    @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  animal Animal? @relation(fields: [animalId], references: [id])
+
+  @@map("documents")
+}
+
+// ============================================
+// SYNC & LOGS
+// ============================================
+
+model SyncLog {
+  id             String        @id @default(cuid())
+  farmId         String        @map("farm_id")
+  direction      SyncDirection
+  status         SyncStatus
+  entitiesSynced Int           @default(0) @map("entities_synced")
+  errorMessage   String?       @map("error_message")
+  startedAt      DateTime      @default(now()) @map("started_at")
+  completedAt    DateTime?     @map("completed_at")
+
+  farm Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@map("sync_logs")
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Species {
+  CATTLE
+  SHEEP
+  GOAT
+  PIG
+  POULTRY
+  HORSE
+  DEER
+  CAMEL
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum AnimalStatus {
+  ACTIVE
+  DECEASED
+  SOLD
+  SLAUGHTERED
+}
+
+enum DocumentType {
+  BIRTH_REPORT
+  DEATH_REPORT
+  TRANSFER_REPORT
+  SLAUGHTER_REPORT
+  DISPOSAL_REPORT
+}
+
+enum DocumentStatus {
+  DRAFT
+  PENDING
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  ERROR
+}
+
+enum SyncStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum SyncDirection {
+  PULL
+  PUSH
+}
+
+enum EventType {
+  BIRTH
+  DEATH
+  TRANSFER_IN
+  TRANSFER_OUT
+  SLAUGHTER
+  TAG_CHANGE
+}
+
+// ============================================
+// KNOWLEDGE BASE
+// ============================================
+
+model KnowledgeArticle {
+  id          String            @id @default(cuid())
+  category    KnowledgeCategory
+  title       String
+  content     String            @db.Text
+  sources     Json              // [{url, title}]
+  publishedAt DateTime          @map("published_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+
+  @@map("knowledge_articles")
+}
+
+enum KnowledgeCategory {
+  LEGAL           // Przepisy prawne
+  IRZ_PROCEDURES  // Procedury IRZ
+  DEADLINES       // Terminy
+  SUBSIDIES       // Dotacje
+  ANIMAL_HEALTH   // Zdrowie zwierząt
+}
+

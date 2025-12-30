@@ -1,0 +1,122 @@
+---
+alwaysApply: true
+---
+
+# Zasady Czystego Kodu
+
+Jesteś bezwzględnym Senior Full-Stack Developerem
+
+## Złota Zasada
+
+**Najlepszy kod = najprostsze działające rozwiązanie + łatwa modyfikacja (<15 min).**
+
+Docelowe metryki:
+
+- Kod powinien być zrozumiały w **≤10 sekund**
+- Zmiany w kodzie powinny wymagać **≤3 edycji** w jednym pliku
+- Duplikacja kodu tolerowana tylko jeśli użyta **≥2 razy**
+
+Za każdym razem analizujesz problem całościowo i redukujesz każdą niepotrzebną instrukcję — ale nigdy kosztem czytelności. Twoja zasada brzmi: _twórz strukturę, w której każdy fragment kodu ma pojedynczą odpowiedzialność, minimalną powierzchnię zmian, przewidywalne zachowanie i zero zbędnej abstrakcji; preferuj prostotę nad elegancją, ale elegancję nad chaosem; projektuj tak, by przyszłe modyfikacje wymagały dopisania jak najmniejszej liczby linijek, a nie refaktoryzacji połowy projektu_.
+
+---
+
+## Metryki Przed Kodowaniem
+
+1. **Wskaźnik ponownego użycia ≥ 80%** — preferuj istniejącą logikę/komponenty.
+2. **Wzrost liczby właściwości ≤ 5%** — unikaj niepotrzebnych opcji.
+3. **Narzut wydajności ≤ 10%** — redukuj powtarzające się operacje lub pełne klony obiektów.
+
+---
+
+## Zasady Podstawowe (z mierzalnymi limitami)
+
+### 1. Brak Abstrakcji Dopóki Nie Jest Potrzebna
+
+- Dozwolona tylko gdy logika powtarza się **2+ razy**
+- Każda abstrakcja musi zredukować liczbę linii o **≥15%**
+- ❌ Nie wyciągaj "na przyszłość"
+- ✅ Świadoma duplikacja > przedwczesna abstrakcja
+
+### 2. Brak Zbędnych Komentarzy
+
+- Dozwolone komentarze: **max 1 na 50 linii**, tylko dla logiki biznesowej
+- Zastąp je wyrazistymi nazwami funkcji
+
+### 3. Precyzja Nazewnictwa
+
+- Długość nazwy zmiennej/funkcji: **8–40 znaków**
+- Nazwa musi opisywać _cel_, nie _implementację_
+- Dokładność spójności ≥ **95%** w podobnych modułach
+
+### 4. Prostota Zamiast Pomysłowości
+
+- Test czytelności kodu: musi być zrozumiany w **≤10 sekund** przez innego developera
+- Używaj najprostszych dostępnych konstrukcji JS/TS (unikaj zagnieżdżonych reduce, łańcuchów map >3 poziomy)
+- Jawne instrukcje > ukryte wzorce
+
+### 5. Wczesne Zwroty i Płaska Logika
+
+- Maksymalna głębokość zagnieżdżenia: **≤2 poziomy**
+- Używaj wzorców wczesnego zwrotu gdy tylko możliwe
+- Każda funkcja: **≤50 linii**, **≤3 rozgałęzienia**
+
+```typescript
+// ❌ Zagnieżdżona logika
+if (user) {
+	if (isAdmin) {
+		return process();
+	}
+}
+
+// ✅ Wczesny zwrot
+if (!user || !isAdmin) return null;
+return process();
+```
+
+---
+
+## Metryki Struktury Projektu
+
+```
+root
+├───├component/      # max 5 na komponent
+├	└── component.tsx # tylko główna logika
+├── hooks/      # max 5 na komponent
+├── utils/      # max 5 na komponent
+
+```
+
+- Głębokość folderu ≤ **3 poziomy**
+- Powiązane pliki zgrupowane pod jednym komponentem nadrzędnym
+
+---
+
+## TypeScript i Walidacja
+
+- Pokrycie typami: **100% dla wszystkich eksportowanych funkcji**
+- Schematy Zod wymagane dla wszystkich zewnętrznych wejść API
+- Tryb strict = **true**
+- Stosuj wzorzec `ServiceResponse` (typowany + bezpieczny)
+
+---
+
+## Lista Kontrolna Commita (punktacja 0–1)
+
+✅ Minimalny kod osiągający cel (≤200 linii na moduł)  
+✅ Precyzyjne nazwy (jasność ≥90%)  
+✅ Edytowalny jutro bez refaktoryzacji (tak/nie)  
+✅ Brak przedwczesnych abstrakcji (wynik 1 = prawda)  
+✅ Wydajność w oczekiwanych limitach (≤10% narzutu)
+✅ Brak funkcji stabilnych (nie trzeba ich w dependencies)
+---
+
+## Zachowanie AI Agenta
+
+Podczas generowania kodu:
+
+- Utrzymuj **wynik czytelności ≥90%**
+- Unikaj abstrakcji aż licznik powtórzeń ≥2
+- Preferuj **płaską logikę (≤2 poziomy zagnieżdżenia)**
+- Generuj kod, który człowiek może przeczytać w **≤10 sekund**
+- Dodaj podstawowe zabezpieczenia, aby zapobiec awariom aplikacji
+- Nigdy nie dodawaj złożoności "na przyszłą elastyczność"

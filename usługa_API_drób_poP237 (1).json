@@ -1,0 +1,794 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API",
+    "version": "v1",
+    "description": "Dokumentacja dla usług dot. drobiu"
+  },
+  "servers": [
+    {
+      "url": "https://irz.arimr.gov.pl/api/drob",
+      "description": "IRZplus"
+    }
+  ],
+  "paths": {
+    "/dokument/api/prod/zzssd": {
+      "post": {
+        "tags": [
+          "zwierzeta-drobiowe-api-prod-controller"
+        ],
+        "operationId": "zlozDyspozycjeZZSSD_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DyspozycjaZZSSD"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZlozenieDyspozycjiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zdarzenia/api/prod/zdarzeniadrob": {
+      "get": {
+        "tags": [
+          "dane-zdarzen-drobiowatych-api-prod-controller"
+        ],
+        "operationId": "pobierzZwierzeta_6",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PobieranieZdarzenApiRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PobieranieZdarzenApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zdarzenia/iw/api/prod/lista": {
+      "get": {
+        "tags": [
+          "zdarzenie-drobiowate-iw-api-prod-controller"
+        ],
+        "operationId": "pobierzZwierzeta_5",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PobieranieZdarzenIWApiRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PobieranieZdarzenApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DyspozycjaZZSSD": {
+        "required": [
+          "numerProducenta",
+          "zgloszenie"
+        ],
+        "type": "object",
+        "properties": {
+          "komorkaOrganizacyjna": {
+            "type": "string",
+            "description": "Komórka organizacyjna ARiMR, do której składana jest dyspozycja"
+          },
+          "numerProducenta": {
+            "type": "string",
+            "description": "Numer producenta, który składa dyspozycję"
+          },
+          "zgloszenie": {
+            "$ref": "#/components/schemas/ZgloszenieZZSSDDTO"
+          }
+        }
+      },
+      "ZgloszenieZZSSDDTO": {
+        "type": "object",
+        "properties": {
+          "pozycje": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PozycjaZZSSDDTO"
+            }
+          },
+          "czyKorekta": {
+            "type": "boolean"
+          },
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "doDzialalnosci": {
+            "type": "string"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "format": "date"
+          },
+          "liczbaDrobiuPrzybylo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "liczbaJajWylegowychPrzybylo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kodKraju": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          }
+        }
+      },
+      "PozycjaZZSSDDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "statusPozycji": {
+            "type": "string",
+            "enum": [
+              "ZATWIERDZONA",
+              "DO_ZATWIERDZENIA",
+              "POMINIETA"
+            ]
+          },
+          "numerIdenPartiiDrobiu": {
+            "type": "string"
+          },
+          "liczbaDrobiuUbylo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "liczbaJajWylegowychUbylo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kategoriaJajWylegowych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerIdenPartiiDrobiuSpozaKraju": {
+            "type": "string"
+          },
+          "wniPrzewoznika": {
+            "type": "string"
+          },
+          "rodzajSrodkaTransportu": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "nrRejestracyjnySrodkaTransportu": {
+            "type": "string"
+          },
+          "transportWlasny": {
+            "type": "boolean"
+          },
+          "budynek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oznaczenieWsadu": {
+            "type": "string"
+          },
+          "masaCialaDrobiuJajWylegowych": {
+            "type": "number"
+          },
+          "czySprzedazNaWlasnePotrzeby": {
+            "type": "boolean"
+          },
+          "zDzialalnosci": {
+            "type": "string"
+          }
+        }
+      },
+      "KodOpisWartosciDto": {
+        "type": "object",
+        "properties": {
+          "kod": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          }
+        }
+      },
+      "ZlozenieDyspozycjiResponse": {
+        "type": "object",
+        "properties": {
+          "komunikat": {
+            "type": "string"
+          },
+          "bledy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BladWalidacjiDTO"
+            }
+          },
+          "numerDokumentu": {
+            "type": "string"
+          }
+        }
+      },
+      "BladWalidacjiDTO": {
+        "type": "object",
+        "properties": {
+          "kodBledu": {
+            "type": "string"
+          },
+          "komunikat": {
+            "type": "string"
+          }
+        }
+      },
+      "PobieranieZdarzenApiRequest": {
+        "type": "object",
+        "properties": {
+          "numerProducenta": {
+            "type": "string",
+            "description": "Numer producenta"
+          },
+          "numerDzialalnosci": {
+            "type": "string",
+            "description": "Numer działalności"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii"
+          },
+          "gatunek": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Gatunek (SIA-SL02125)"
+          },
+          "typZdarzenia": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Typ zdarzenia (SIA-SL02126)"
+          },
+          "stanZdarzenia": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Stan zdarzenia (SIA-SL02194)"
+          },
+          "dataZdarzeniaOd": {
+            "type": "string",
+            "description": "Data zdarzenia od",
+            "format": "date"
+          },
+          "dataZdarzeniaDo": {
+            "type": "string",
+            "description": "Data zdarzenia do",
+            "format": "date"
+          }
+        },
+        "description": "Request pobierania zdarzeń przez API produkcyjne"
+      },
+      "PobieranieZdarzenApiResponse": {
+        "type": "object",
+        "properties": {
+          "komunikat": {
+            "type": "string",
+            "description": "Komunikat"
+          },
+          "listaZdarzenie": {
+            "type": "array",
+            "description": "Lista zdarzeń",
+            "items": {
+              "$ref": "#/components/schemas/ZdarzenieDrobioweApiDTO"
+            }
+          }
+        },
+        "description": "Response pobierania zdarzeń przez API produkcyjne"
+      },
+      "ZdarzenieDrobioweApiDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "description": "Liczba porządkowa",
+            "format": "int32"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii drobiu"
+          },
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "liczbaSztukDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu",
+            "format": "int32"
+          },
+          "liczbaSztukJajWylegowych": {
+            "type": "integer",
+            "description": "Liczba sztuk jaj wylęgowych",
+            "format": "int32"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "stanZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "description": "Data zdarzenia",
+            "format": "date"
+          },
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string",
+            "description": "Zgłaszająca działalność"
+          },
+          "numerDzialalnosciKomplementarnej": {
+            "type": "string",
+            "description": "Komplementarna działalność"
+          },
+          "uuid": {
+            "type": "string",
+            "description": "UUID pozycji generującej zdarzenie"
+          },
+          "blad": {
+            "type": "array",
+            "description": "Lista błędów",
+            "items": {
+              "$ref": "#/components/schemas/BladDTO"
+            }
+          },
+          "szczegolyZdarzenia": {
+            "$ref": "#/components/schemas/ISzczegolyZdarzeniaDTO"
+          }
+        },
+        "description": "Dane zdarzenia"
+      },
+      "BladDTO": {
+        "type": "object",
+        "properties": {
+          "kodBledu": {
+            "type": "string"
+          },
+          "komunikat": {
+            "type": "string"
+          }
+        },
+        "description": "Lista błędów"
+      },
+      "ISzczegolyZdarzeniaDTO": {
+        "type": "object",
+        "description": "Szczegóły zdarzenia",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SzczegolyZdarzeniaZADDTO"
+          },
+          {
+            "$ref": "#/components/schemas/SzczegolyZdarzeniaZRDDTO"
+          },
+          {
+            "$ref": "#/components/schemas/SzczegolyZdarzeniaZURDDTO"
+          },
+          {
+            "$ref": "#/components/schemas/SzczegolyZdarzeniaZUZDDTO"
+          },
+          {
+            "$ref": "#/components/schemas/SzczegolyZdarzeniaZZSSDDTO"
+          }
+        ]
+      },
+      "SzczegolyZdarzeniaZADDTO": {
+        "type": "object",
+        "properties": {
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string",
+            "description": "Numer działalności"
+          },
+          "numerKancelaryjnyRaportuZKontroli": {
+            "type": "string",
+            "description": "Numer kancelaryjny Raportu RKNM-P"
+          },
+          "numerKancelaryjnyRaportuRKNMIRZC": {
+            "type": "string",
+            "description": "Numer kancelaryjny Raportu RKNM-IRZ-C"
+          },
+          "dataZakonczeniaKontroliZRaportu": {
+            "type": "string",
+            "description": "Data zakończenia kontroli z Raportu RKNM-P",
+            "format": "date"
+          },
+          "dataZakonczeniaKontroliZRaportuRKNMIRZC": {
+            "type": "string",
+            "description": "Data zakończenia kontroli z Raportu RKNM-IRZ-C",
+            "format": "date"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer identyfikacyjny/numer partii"
+          },
+          "liczbaDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu stwierdzona podczas kontroli",
+            "format": "int32"
+          },
+          "czyUtworzonoWczesniejZdarzenieAktualizacja": {
+            "type": "boolean",
+            "description": "Czy utworzono wcześniej zdarzenie o typie Aktualizacja"
+          },
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          }
+        },
+        "description": "Dane szczegółów zdarzenia Aktualizacja"
+      },
+      "SzczegolyZdarzeniaZRDDTO": {
+        "type": "object",
+        "properties": {
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string",
+            "description": "Numer działalności"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii drobiu"
+          },
+          "liczbaDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu",
+            "format": "int32"
+          },
+          "liczbaJajWylegowych": {
+            "type": "integer",
+            "description": "Liczba sztuk jaj wylęgowych",
+            "format": "int32"
+          },
+          "kategoriaJajWylegowych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "description": "Data przybycia do działalności",
+            "format": "date"
+          },
+          "dataWplywu": {
+            "type": "string",
+            "description": "Data wpływu dokumentu",
+            "format": "date"
+          },
+          "wniPrzewoznika": {
+            "type": "string",
+            "description": "WNI przewoźnika"
+          },
+          "rodzajSrodkaTransportu": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "nrRejestracyjnySrodkaTransportu": {
+            "type": "string",
+            "description": "Numer rejestracyjny środka transportu"
+          },
+          "transportWlasny": {
+            "type": "boolean",
+            "description": "Transport własny"
+          },
+          "budynek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerIdenPartiiDrobiuSpozaKraju": {
+            "type": "string",
+            "description": "Numer partii drobiu/jaj wylęgowych nadany poza granicami Polski"
+          },
+          "kodKraju": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oznaczenieWsadu": {
+            "type": "string",
+            "description": "Oznaczenie wsadu"
+          }
+        },
+        "description": "Dane szczegółów zdarzenia Urodzenia"
+      },
+      "SzczegolyZdarzeniaZURDDTO": {
+        "type": "object",
+        "properties": {
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii drobiu"
+          },
+          "numerDzialalnosci": {
+            "type": "string",
+            "description": "Przyjęte z działalności"
+          },
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string",
+            "description": "Numer rzeźni"
+          },
+          "numerPartiiUboju": {
+            "type": "string",
+            "description": "Numer partii uboju"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "description": "Data zdarzenia",
+            "format": "date"
+          },
+          "dataKomplementarna": {
+            "type": "string",
+            "description": "Data kupna/wwozu",
+            "format": "date"
+          },
+          "dataWplywu": {
+            "type": "string",
+            "description": "Data wpływu dokumentu",
+            "format": "date"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "liczbaDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu",
+            "format": "int32"
+          },
+          "masaDrobiu": {
+            "type": "number",
+            "description": "Masa drobiu poddanego ubojowi (kg)",
+            "format": "double"
+          },
+          "wniPrzewoznika": {
+            "type": "string",
+            "description": "WNI przewoźnika"
+          },
+          "rodzajSrodkaTransportu": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "nrRejestracyjnySrodkaTransportu": {
+            "type": "string",
+            "description": "Numer rejestracyjny środka transportu"
+          },
+          "transportWlasny": {
+            "type": "boolean",
+            "description": "Transport własny"
+          },
+          "kodKraju": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "ubojRytualny": {
+            "type": "boolean",
+            "description": "Ubój rytualny"
+          }
+        },
+        "description": "Dane szczegółów zdarzenia Ubój w rzeźni"
+      },
+      "SzczegolyZdarzeniaZUZDDTO": {
+        "type": "object",
+        "properties": {
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii drobiu"
+          },
+          "numerDzialalnosciKomplementanej": {
+            "type": "string",
+            "description": "Przyjęte z działalności"
+          },
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string",
+            "description": "Numer zakładu przetwórczego lub spalarni"
+          },
+          "liczbaDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu",
+            "format": "int32"
+          },
+          "liczbaJajWylegowych": {
+            "type": "integer",
+            "description": "Liczba sztuk jaj wylęgowych",
+            "format": "int32"
+          },
+          "kategoriaJajWylegowych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "description": "Data kolczykowania",
+            "format": "date"
+          },
+          "dataKomplementarna": {
+            "type": "string",
+            "description": "Data przyjęcia do zakładu",
+            "format": "date"
+          },
+          "dataWplywu": {
+            "type": "string",
+            "description": "Data wpływu dokumentu",
+            "format": "date"
+          },
+          "masaCialaDrobiuJajWylegowych": {
+            "type": "number",
+            "description": "Masa drobiu/Jaj wylęgowych (kg)"
+          }
+        },
+        "description": "Dane szczegółów zdarzenia Unieszkodliwienie zwłok"
+      },
+      "SzczegolyZdarzeniaZZSSDDTO": {
+        "type": "object",
+        "properties": {
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerDzialalnosciKomplementanej": {
+            "type": "string",
+            "description": "Z działalności(zdarzenie przybycia) lub Do działalności(zdarzenie wybycia)"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii drobiu"
+          },
+          "liczbaDrobiu": {
+            "type": "integer",
+            "description": "Liczba sztuk drobiu",
+            "format": "int32"
+          },
+          "liczbaJajWylegowych": {
+            "type": "integer",
+            "description": "Liczba sztuk jaj wylęgowych",
+            "format": "int32"
+          },
+          "kategoriaJajWylegowych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "typZdarzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "description": "Data kolczykowania",
+            "format": "date"
+          },
+          "dataWplywu": {
+            "type": "string",
+            "description": "Data wpływu dokumentu",
+            "format": "date"
+          },
+          "wniPrzewoznika": {
+            "type": "string",
+            "description": "WNI przewoźnika"
+          },
+          "rodzajSrodkaTransportu": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "nrRejestracyjnySrodkaTransportu": {
+            "type": "string",
+            "description": "Numer rejestracyjny środka transportu"
+          },
+          "transportWlasny": {
+            "type": "boolean",
+            "description": "Transport własny"
+          },
+          "kodKraju": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oznaczenieWsadu": {
+            "type": "string",
+            "description": "Oznaczenie wsadu"
+          },
+          "budynek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "masaCialaDrobiuJajWylegowych": {
+            "type": "number",
+            "description": "Masa drobiu/Jaj wylęgowych (kg)"
+          },
+          "sprzedazNaUzytekWlasny": {
+            "type": "boolean",
+            "description": "Sprzedaż na użytek własny"
+          }
+        },
+        "description": "Dane szczegółów zdarzenia Padnięcie"
+      },
+      "PobieranieZdarzenIWApiRequest": {
+        "type": "object",
+        "properties": {
+          "gatunek": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Gatunek (SIA-SL02125)"
+          },
+          "historiaZdarzen": {
+            "type": "string",
+            "description": "Kod wartości słownikowej - Historia zdarzeń zwierzęcia (SIA-SL02196)"
+          },
+          "stanKorekty": {
+            "type": "string",
+            "description": "Kod wartości słownikowej - Stan korekty (SIA-SL02253)"
+          },
+          "stanZdarzenia": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Stan zdarzenia (SIA-SL02194)"
+          },
+          "numerPartiiDrobiu": {
+            "type": "string",
+            "description": "Numer partii"
+          },
+          "typZdarzenia": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Typ zdarzenia (SIA-SL02126)"
+          },
+          "numerDzialalnosci": {
+            "type": "string",
+            "description": "Numer działalności"
+          },
+          "numerDzialalnosciFormowaniaWysylki": {
+            "type": "string",
+            "description": "Numer działalności formowania wysyłki"
+          },
+          "dataZdarzeniaOd": {
+            "type": "string",
+            "description": "Data zdarzenia od",
+            "format": "date"
+          },
+          "dataZdarzeniaDo": {
+            "type": "string",
+            "description": "Data zdarzenia do",
+            "format": "date"
+          },
+          "tylkoZdarzeniaWplywajaceNaLokalizacje": {
+            "type": "boolean",
+            "description": "Tylko zdarzenia wpływające na lokalizację"
+          }
+        },
+        "description": "Request pobierania zdarzeń dla IW przez API produkcyjne"
+      }
+    }
+  }
+}

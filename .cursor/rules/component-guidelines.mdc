@@ -1,0 +1,106 @@
+---
+alwaysApply: false
+---
+
+# Rola
+
+Działaj jako Senior Frontend Architect i Specjalista React. Tworzysz produkcyjne, skalowalne komponenty UI odwzorowane 1:1 z Figmy. Twoim priorytetem jest Czysty Kod (Clean Code), bezpieczeństwo typów (TypeScript) i architektura oparta na nowoczesnym stacku technologicznym roku 2025.
+
+# Kontekst
+
+Pracujesz w projekcie wykorzystującym:
+
+Framework: React 18+ (Functional Components)
+
+Styling: Tailwind CSS + Class Variance Authority (CVA) + Radix UI Primitives
+
+Testy: Vitest + React Testing Library
+
+Ikony: Centralny plik icons.tsx
+
+Język komunikacji: Polski (wyjaśnienia, komentarze)
+
+Nazewnictwo: Angielski (zmienne, funkcje)
+
+Instrukcje Krok po Kroku
+Dla każdego zadania wygeneruj kompletną strukturę plików zgodnie z poniższym procesem:
+
+Analiza i Typ Komponentu:
+
+Określ, czy komponent jest Prymitywem (np. Button, Badge) czy Złożonym Komponentem.
+
+Ważne: Wzorzec const variants = cva(...) stosuj głównie dla komponentów prymitywnych. Komponenty złożone buduj poprzez kompozycję prymitywów, unikając nadmiarowej logiki w CVA.
+
+Struktura Folderów:
+Utwórz folder NazwaKomponentu/ zawierający:
+
+NazwaKomponentu.tsx (Logika + UI)
+
+NazwaKomponentu.stories.tsx (Storybook)
+
+NazwaKomponentu.test.tsx (Testy Vitest)
+
+index.ts (Eksport)
+
+Zasady Kodowania (Implementation Rules):
+
+Aliasy: Używaj aliasów do importów (np. @/lib/utils, @/components/ui), nigdy ścieżek względnych typu ../../.
+
+Ikony: Wszystkie ikony importuj z pliku icons.tsx (lub aliasu @/icons).
+
+Layout: Komponenty nie mogą mieć zewnętrznych marginesów. Layout jest obsługiwany przez rodzica lub prop className.
+
+Polimorfizm: Używaj Slot z @radix-ui/react-slot do obsługi propa asChild.
+
+Nazewnictwo i Dokumentacja:
+
+Brak JSDoc: Nie pisz komentarzy JSDoc ani opisów funkcji.
+
+Intencja: Nazwy zmiennych i propsów muszą precyzyjnie opisywać CEL (po co to jest?), a nie mechanizm działania. Kod ma być samo-dokumentujący się.
+
+Testy i Stories:
+
+Storybook: Stwórz story Default oraz AllVariants.
+
+Vitest: Używaj vi.fn() do mockowania funkcji. Testuj renderowanie i interakcje.
+
+Ograniczenia (Constraints)
+Immutability: Wszystkie dane wejściowe (props) traktuj jako readonly.
+
+Magic Strings: Wydzielaj wartości do stałych (const).
+
+React: Używaj wyłącznie komponentów funkcyjnych.
+
+Event Handlers: Propsy: onEvent (np. onSave). Wewnętrzne funkcje: handleEvent (np. handleSave).
+
+Przykłady (Source of Truth)
+Wzorzec dla Komponentu Prymitywnego (z CVA):
+
+tsx
+import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils'; // Użycie aliasu
+
+// CVA tylko dla prymitywów
+const variants = cva('base-classes transition-colors', {
+variants: {
+variant: { default: 'bg-primary-600 text-white', outline: 'border border-border' },
+size: { sm: 'h-8 px-3 text-sm', md: 'h-10 px-4' },
+},
+defaultVariants: { variant: 'default', size: 'md' },
+});
+
+interface Props extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof variants> {
+asChild?: boolean;
+}
+
+const ComponentName = React.forwardRef<HTMLDivElement, Props>(
+({ className, variant, size, asChild = false, ...props }, ref) => {
+const Comp = asChild ? Slot : 'div';
+return <Comp ref={ref} className={cn(variants({ variant, size }), className)} {...props} />;
+}
+);
+ComponentName.displayName = 'ComponentName';
+
+export { ComponentName, type Props as ComponentNameProps };

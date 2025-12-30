@@ -1,0 +1,129 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "OpenAPI definition",
+		"version": "v0"
+	},
+	"servers": [
+		{
+			"url": "https://irz.arimr.gov.pl/api/indywidualne",
+			"description": "IRZplus"
+		}
+	],
+	"paths": {
+		"/zwierze/api/prod/zwierzeIndywidualne": {
+			"get": {
+				"tags": [
+					"dane-zwierzat-indywidualnych-api-prod-controller"
+				],
+				"operationId": "pobierzDaneZwierzecia_1",
+				"parameters": [
+					{
+						"name": "request",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/DaneZwierzeciaApiRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DaneZwierzeciaApiResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"KodOpisWartosciDto": {
+				"type": "object",
+				"properties": {
+					"kod": {
+						"type": "string"
+					},
+					"opis": {
+						"type": "string"
+					}
+				}
+			},
+			"DaneZwierzeciaApiRequest": {
+				"type": "object",
+				"properties": {
+					"numerIdentyfikacyjnyZwierzecia": {
+						"type": "string",
+						"description": "Numer identyfikacyjny zwierzęcia"
+					}
+				},
+				"description": "Request pobierania danych zwierzęcia przez API produkcyjne"
+			},
+			"DaneZwierzeciaApiResponse": {
+				"type": "object",
+				"properties": {
+					"komunikat": {
+						"type": "string",
+						"description": "Komunikat"
+					},
+					"numerIdentyfikacyjnyZwierzecia": {
+						"type": "string",
+						"description": "Numer identyfikacyjny zwierzęcia"
+					},
+					"gatunek": {
+						"$ref": "#/components/schemas/KodOpisWartosciDto"
+					},
+					"dataUrodzenia": {
+						"type": "string",
+						"description": "Data urodzenia",
+						"format": "date"
+					},
+					"plec": {
+						"$ref": "#/components/schemas/KodOpisWartosciDto"
+					},
+					"kodRasy": {
+						"$ref": "#/components/schemas/KodOpisWartosciDto"
+					},
+					"czyMatka": {
+						"type": "boolean",
+						"description": "Czy zwierzę było matką"
+					},
+					"dataWyrejestrowania": {
+						"type": "string",
+						"description": "Data wyrejestrowania - data uboju w rzeźni, padnięcia, uboju, zabicia, wywozu do UE lub poza UE",
+						"format": "date"
+					},
+					"masaCialaZwierzecia": {
+						"type": "number",
+						"description": "Masa ciała zwierzęcia",
+						"format": "double"
+					},
+					"masaTuszy": {
+						"type": "number",
+						"description": "Masa tuszy zwierzęcia",
+						"format": "double"
+					},
+					"numerDzialalnosci": {
+						"type": "string",
+						"description": "Numer działalności - ostatnia działalność, w której zwierzę było lokalizowane według łańcucha przemieszczeń"
+					},
+					"sposobOznakowania": {
+						"type": "string",
+						"description": "Sposób oznakowania"
+					},
+					"informacjaOOswiadczeniuDDS": {
+						"type": "string",
+						"description": "Informacja o oświadczeniu DDS"
+					}
+				},
+				"description": "Response pobierania danych zwierzęcia przez API produkcyjne"
+			}
+		}
+	}
+}

@@ -1,0 +1,1419 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ZHK API",
+    "version": "v1",
+    "description": "Dokumentacja dla usług ZHK API"
+  },
+  "servers": [
+    {
+      "url": "https://irz.arimr.gov.pl/api/koniowate",
+      "description": "IRZplus"
+    }
+  ],
+  "paths": {
+    "/zwierze/zhk/api/prod/modyfikuj": {
+      "post": {
+        "tags": [
+          "zwierze-koniowate-zhk-api-prod-controller"
+        ],
+        "operationId": "modyfikujDaneKoniowatego",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModyfikacjaKoniowategoZHKApiDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/WynikModyfikacjaKoniowategoZHKApiDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zwierze/zhk/api/prod/lista": {
+      "get": {
+        "tags": [
+          "zwierze-koniowate-zhk-api-prod-controller"
+        ],
+        "operationId": "pobierzZwierzeta_2",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PobieranieZwierzatApiRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PobieranieZwierzatApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zdarzenia/zhk/api/prod/lista": {
+      "get": {
+        "tags": [
+          "zdarzenia-koniowate-zhk-api-prod-controller"
+        ],
+        "operationId": "pobierzZdarzenia_2",
+        "parameters": [
+          {
+            "name": "searchCriteria",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ZdarzenieKoniowateZHKApiSearchCriteriaDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PobieranieZdarzenZHKApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ModyfikacjaKoniowategoZHKApiDTO": {
+        "type": "object",
+        "properties": {
+          "tryb": {
+            "type": "integer",
+            "description": "Tryb aktualizacji danych opisu koniowatego  (atrybuty obiektu ZwierzeKoniowate aktualizowane przez usługę, występujące w sekcjach nie będących listami tj. Dane zwierzęcia, Opis koniowatego, Informacje dotyczące kastracji).\n\nMożliwe wartości: \n•\t1 – aktualizacja zgodnie z R5.1\n•\t2 - aktualizacja zgodnie z R5.2\n",
+            "format": "int32"
+          },
+          "uzasadnienie": {
+            "type": "string",
+            "description": "Uzasadnienie"
+          },
+          "idKoniowatego": {
+            "type": "integer",
+            "description": "Identyfikator koniowatego",
+            "format": "int64"
+          },
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "plec": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "masc": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataUrodzenia": {
+            "type": "string",
+            "description": "Data urodzenia",
+            "format": "date"
+          },
+          "aktualnyStatusEpizootyczny": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "imieNazwaKoniowatego": {
+            "type": "string",
+            "description": "Imię/Nazwa koniowatego"
+          },
+          "dataUbojuZaGranica": {
+            "type": "string",
+            "description": "Data uboju za granicą",
+            "format": "date"
+          },
+          "krajUbojuZaGranica": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "krajPochodzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "szczegolyZwierzeKoniowate": {
+            "$ref": "#/components/schemas/SzczegolyZwierzeKoniowateDTO"
+          },
+          "historiaKodowTranspondera": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoriaKodowTransponderaDTO"
+            }
+          },
+          "wylaczenieKoniowategoZLancucha": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WylaczenieKoniowategoZLancuchaZHKApiDTO"
+            }
+          },
+          "znakiZatwierdzeniaZakladu": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZnakZatwierdzeniaZakladuDTO"
+            }
+          },
+          "licencjeKoniowatego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicencjaKoniowategoDTO"
+            }
+          },
+          "historiaWlascicieliKoniowatego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoriaWlascicieliKoniowategoZHKDTO"
+            }
+          },
+          "informacjeDotyczaceDokumentuIdentyfikacyjnego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformacjeDotyczaceDokumentuIdentyfikacyjnegoDTO"
+            }
+          },
+          "niepowtarzalnyDozywotniNumerUELN": {
+            "type": "string",
+            "description": "Niepowtarzalny dożywotni numer UELN"
+          }
+        },
+        "description": "Obiekt DTO modyfikacji koniowatego przez API ZHK"
+      },
+      "WynikModyfikacjaKoniowategoZHKApiDTO": {
+        "type": "object",
+        "properties": {
+          "komunikat": {
+            "type": "string",
+            "description": "Komunikat wyniku modyfikacji koniowatego"
+          },
+          "niepowtarzalnyDozywotniNumerUELN": {
+            "type": "string",
+            "description": "Niepowtarzalny dożywotni numer UELN koniowatego"
+          }
+        },
+        "description": "Obiekt DTO wyniku modyfikacji przez API ZHK "
+      },
+      "PobieranieZwierzatApiRequest": {
+        "type": "object",
+        "properties": {
+          "numerProducenta": {
+            "type": "string",
+            "description": "Numer producenta"
+          },
+          "numerDzialalnosci": {
+            "type": "string",
+            "description": "Numer działalności"
+          },
+          "gatunek": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Gatunek (SIA-SL02120)"
+          },
+          "niepowtarzalnyDozywotniNumer": {
+            "type": "string",
+            "description": "Numer identyfikacyjny rejestrowanego zwierzęcia"
+          },
+          "plec": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Kod płci zwierzęcia (SIA-SL02121)"
+          },
+          "numerSrodkaIdentyfikacji": {
+            "type": "string",
+            "description": "Numer/kod transpondera"
+          },
+          "nazwaKoniowatego": {
+            "type": "string",
+            "description": "Imię/Nazwa koniowatego"
+          },
+          "masc": {
+            "type": "string",
+            "description": "Kod wartości słownikowej – Kod masci zwierzęcia (SIA-SL02122)"
+          },
+          "stanDanychNaDzien": {
+            "type": "string",
+            "description": "Stan danych na dzień",
+            "format": "date"
+          },
+          "idKoniowatego": {
+            "type": "integer",
+            "description": "ID koniowatego",
+            "format": "int64"
+          },
+          "dataModyfikacjiBiznesowejOd": {
+            "type": "string",
+            "description": "Data modyfikacji biznesowej od",
+            "format": "date"
+          },
+          "dataModyfikacjiBiznesowejDo": {
+            "type": "string",
+            "description": "Data modyfikacji biznesowej do",
+            "format": "date"
+          },
+          "tylkoWykastrowane": {
+            "type": "boolean",
+            "description": "Tylko wykastrowane"
+          },
+          "tylkoZeZmianaTranspondera": {
+            "type": "boolean",
+            "description": "Tylko koniowate ze zmianą transpondera"
+          },
+          "tylkoZWaznaLicencja": {
+            "type": "boolean",
+            "description": "Tylko koniowate z ważną licencją"
+          },
+          "dataWylaczeniaZLancucha": {
+            "type": "string",
+            "description": "Data wyłączenia z łańcucha",
+            "format": "date"
+          },
+          "wylaczenieZLancuchaNaDate": {
+            "type": "boolean",
+            "description": "Wyłączenie z łańcucha na datę"
+          },
+          "nrEPWlasciciela": {
+            "type": "string",
+            "description": "Numer Ewidencji Producentów właściciela koniowatych"
+          },
+          "nrWlasciciela": {
+            "type": "string",
+            "description": "Numer właściciela koniowatych"
+          }
+        },
+        "description": "Request pobierania zwierząt przez API produkcyjne"
+      },
+      "PobieranieZwierzatApiResponse": {
+        "type": "object",
+        "properties": {
+          "komunikat": {
+            "type": "string",
+            "description": "Komunikat"
+          },
+          "listaZwierzeta": {
+            "type": "array",
+            "description": "Lista zwierząt",
+            "items": {
+              "$ref": "#/components/schemas/ZwierzetaZHKDTO"
+            }
+          }
+        },
+        "description": "Response pobierania zwierząt przez API produkcyjne"
+      },
+      "ZdarzenieKoniowateZHKApiSearchCriteriaDTO": {
+        "type": "object",
+        "properties": {
+          "numerDzialalnosci": {
+            "type": "string"
+          },
+          "idKoniowatego": {
+            "type": "string"
+          },
+          "numerKodTranspondera": {
+            "type": "string"
+          },
+          "niepowtarzalnyDozywotniNumerUELN": {
+            "type": "string"
+          },
+          "gatunek": {
+            "type": "string"
+          },
+          "typZdarzenia": {
+            "type": "string"
+          },
+          "stanZdarzenia": {
+            "type": "string"
+          },
+          "kodBledu": {
+            "type": "string"
+          },
+          "dataZdarzeniaOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataZdarzeniaDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataUtworzeniaOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataUtworzeniaDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataModyfikacjiOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataModyfikacjiDo": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "PobieranieZdarzenZHKApiResponse": {
+        "type": "object",
+        "properties": {
+          "komunikat": {
+            "type": "string",
+            "description": "Komunikat"
+          },
+          "listaZdarzen": {
+            "type": "array",
+            "description": "Lista zdarzeń zwierząt koniowatych",
+            "items": {
+              "$ref": "#/components/schemas/ZdarzenieKoniowateZHKApiDTO"
+            }
+          }
+        },
+        "description": "Response pobierania zdarzeń zwierząt koniowatych przez ZHK przez API produkcyjne"
+      },
+      "KodOpisWartosciDto": {
+        "type": "object",
+        "properties": {
+          "kod": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          }
+        }
+      },
+      "SzczegolyZwierzeKoniowateDTO": {
+        "type": "object",
+        "properties": {
+          "rodzajDawcy": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "niepowtarzalnyDozywotniNumerUelnOjcaDawcyNasienia": {
+            "type": "string"
+          },
+          "nazwaOjcaLubDawcyNasienia": {
+            "type": "string"
+          },
+          "rodzajDawczyni": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "nrUelnDawczyniZarodkaKomorkiJajowej": {
+            "type": "string"
+          },
+          "nazwaDawczyniZarodkaKomorkiJajowej": {
+            "type": "string"
+          },
+          "niepowtarzalnyDozywotniNumerUelnMatki": {
+            "type": "string"
+          },
+          "nazwaMatki": {
+            "type": "string"
+          },
+          "numerWlascicielaKoniowatego": {
+            "type": "string"
+          },
+          "miejsceWszczepieniaTranspondera": {
+            "type": "string"
+          },
+          "glowa": {
+            "type": "string"
+          },
+          "szyja": {
+            "type": "string"
+          },
+          "przedniaNogaL": {
+            "type": "string"
+          },
+          "przedniaNogaP": {
+            "type": "string"
+          },
+          "tylnaNogaL": {
+            "type": "string"
+          },
+          "tylnaNogaP": {
+            "type": "string"
+          },
+          "klodaTulow": {
+            "type": "string"
+          },
+          "znamiona": {
+            "type": "string"
+          },
+          "miejsceMiejscowoscOpisu": {
+            "type": "string"
+          },
+          "dataOpisu": {
+            "type": "string",
+            "format": "date"
+          },
+          "imieNazwiskoOsobyDokonujacejOpisu": {
+            "type": "string"
+          },
+          "podaneLekiWylaczenieKoniowategoZLancuchaZywnosciowego": {
+            "type": "string",
+            "enum": [
+              "TAK",
+              "NIE",
+              "DOZYWOTNIO"
+            ]
+          },
+          "informacjaOPodanychLekachWylaczeniuKoniowategoZLancuchaZywnosciowego": {
+            "type": "string"
+          },
+          "kodZwiazkuHodowcowKoniowatych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oddzialRegionalnyZwiazku": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oryginalDuplikatDokumentuIdentyfikacyjnegoDokumentZastepczyKoniowatego": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "systemOdczytu": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "zastepczaMetodaIdentyfikacji": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "informacjaOInnejMetodzieIdentyfikacji": {
+            "type": "string"
+          },
+          "miejsceUrodzenia": {
+            "type": "string"
+          },
+          "kodKrajuUrodzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "typRasowy": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "rasa": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "przeznaczenie": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "weryfikacjaOpisu": {
+            "type": "string"
+          },
+          "numerSwiadectwaZdrowia": {
+            "type": "string"
+          },
+          "danePoprzedniegoWlasciciela": {
+            "type": "string"
+          },
+          "kastracja": {
+            "type": "boolean"
+          },
+          "dataKastracji": {
+            "type": "string",
+            "format": "date"
+          },
+          "miejsceKastracji": {
+            "type": "string"
+          },
+          "lekarzDokonujacyKastracji": {
+            "type": "string"
+          },
+          "imieLubNazwaSkrocona": {
+            "type": "string"
+          },
+          "nazwiskoLubNazwa": {
+            "type": "string"
+          },
+          "pesel": {
+            "type": "string"
+          },
+          "nip": {
+            "type": "string"
+          },
+          "regon": {
+            "type": "string"
+          },
+          "numerPaszportuLubInnegoDokumentu": {
+            "type": "string"
+          },
+          "numerDokumentuIdentyfikacyjnego": {
+            "type": "string"
+          },
+          "dataWydaniaDokumentuIdentyfikacyjnego": {
+            "type": "string",
+            "format": "date"
+          },
+          "nazwaWlasciwegoOrganuLubOrganuKtoryWydalDokumentIdentyfikacyjny": {
+            "type": "string"
+          },
+          "adresWlasciwegoOrganuLubOrganuKtoryWydalDokumentIdentyfikacyjny": {
+            "type": "string"
+          },
+          "przyczynaWydaniaNowegoDokumentuIdentyfikacyjnego": {
+            "type": "string"
+          },
+          "koniecznoscWpisaniaDoKsiegiHodowlanej": {
+            "type": "boolean"
+          },
+          "sposobOdbioruDokumentuIdentyfikacyjnego": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerDzialalnosciUrodzenia": {
+            "type": "string"
+          },
+          "kastracjaKodZwiazku": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "kastracjaOddzial": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          }
+        }
+      },
+      "HistoriaKodowTransponderaDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataZarejestrowaniaWszczepieniaWSystemie": {
+            "type": "string",
+            "format": "date"
+          },
+          "numerKodTranspondera": {
+            "type": "string"
+          },
+          "miejsceWszczepieniaTranspondera": {
+            "type": "string"
+          },
+          "numerDokumentu": {
+            "type": "string"
+          },
+          "przyczynaZmiany": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataObowiazywaniaOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataObowiazywaniaDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "zrodloWpisu": {
+            "type": "string",
+            "enum": [
+              "WNIOSEK",
+              "ZGLOSZENIE",
+              "IMPORT",
+              "API",
+              "MODYFIKACJA"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "WylaczenieKoniowategoZLancuchaZHKApiDTO": {
+        "type": "object",
+        "properties": {
+          "dataWpisu": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "podaneLekiWylaczenieKoniowategoZLancuchaZywnosciowego": {
+            "type": "boolean"
+          },
+          "informacjaOPodanychLekachWylaczeniuKoniowategoZLancuchaZywnosciowego": {
+            "type": "string"
+          },
+          "dozywotnio": {
+            "type": "boolean"
+          },
+          "miejsceWpisu": {
+            "type": "string"
+          },
+          "numerLekarzaWeterynarii": {
+            "type": "string"
+          },
+          "imieNazwiskoLekarzaWeterynarii": {
+            "type": "string"
+          },
+          "nazwaOrganuKtoryDokonalWpisu": {
+            "type": "string"
+          },
+          "powodDokonaniaWpisu": {
+            "type": "string"
+          },
+          "wylaczenieKoniowategoZLancuchaKodZwiazku": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "wylaczenieKoniowategoZLancuchaOddzial": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          }
+        }
+      },
+      "ZnakZatwierdzeniaZakladuDTO": {
+        "type": "object",
+        "properties": {
+          "znakZatwierdzeniaZakladuKoniowatego": {
+            "type": "string"
+          },
+          "imieLubNazwiskoLekarzaPLW": {
+            "type": "string"
+          },
+          "numerLekarzaPLW": {
+            "type": "string"
+          },
+          "dataWaznosci": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataWydania": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "LicencjaKoniowategoDTO": {
+        "type": "object",
+        "properties": {
+          "znakZatwierdzeniaLicencji": {
+            "type": "string"
+          },
+          "dataWydaniaLicencji": {
+            "type": "string",
+            "format": "date"
+          },
+          "kodZwiazkuKoniowatych": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "oddzialRegionalny": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataObowiazywaniaLicencji": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "HistoriaWlascicieliKoniowategoZHKDTO": {
+        "type": "object",
+        "properties": {
+          "dataUmowyOswiadczenia": {
+            "type": "string",
+            "description": "Data umowy lub oświadczenia",
+            "format": "date"
+          },
+          "umowaOPrzeniesienieWlasnosci": {
+            "type": "boolean",
+            "description": "Umowa o przeniesienie własności"
+          },
+          "numerWlasciciela": {
+            "type": "string",
+            "description": "Numer właściciela"
+          },
+          "numerEPWlasciciela": {
+            "type": "string",
+            "description": "Numer Ewidencji Producentów właściciela koniowatego"
+          },
+          "pesel": {
+            "type": "string",
+            "description": "PESEL"
+          },
+          "nip": {
+            "type": "string",
+            "description": "NIP"
+          },
+          "regon": {
+            "type": "string",
+            "description": "REGON"
+          },
+          "nrPaszportuLubInnegoDokumentu": {
+            "type": "string",
+            "description": "Numer paszportu lub innego dokumentu"
+          },
+          "imieNazwaSkrocona": {
+            "type": "string",
+            "description": "Imię lub nazwa skrócona"
+          },
+          "nazwiskoNazwa": {
+            "type": "string",
+            "description": "Nazwisko lub imię"
+          },
+          "kraj": {
+            "type": "string",
+            "description": "Kraj"
+          },
+          "wojewodztwo": {
+            "type": "string",
+            "description": "Województwo"
+          },
+          "powiat": {
+            "type": "string",
+            "description": "powiat"
+          },
+          "gmina": {
+            "type": "string",
+            "description": "Gmina"
+          },
+          "rodzajGminy": {
+            "type": "string",
+            "description": "Rodzaj gminy"
+          },
+          "miejscowosc": {
+            "type": "string",
+            "description": "Miejscowość"
+          },
+          "ulica": {
+            "type": "string",
+            "description": "Ulica"
+          },
+          "posesja": {
+            "type": "string",
+            "description": "Posesja"
+          },
+          "lokal": {
+            "type": "string",
+            "description": "Lokal"
+          },
+          "kodPocztowy": {
+            "type": "string",
+            "description": "Kod pocztowy"
+          },
+          "poczta": {
+            "type": "string",
+            "description": "Poczta"
+          },
+          "telefonStacjonarny": {
+            "type": "string",
+            "description": "Telefon stacjonarny"
+          },
+          "telefonKomorkowy": {
+            "type": "string",
+            "description": "Telefon komórkowy"
+          },
+          "telefonZagraniczny": {
+            "type": "string",
+            "description": "Telefon zagraniczny"
+          },
+          "faks": {
+            "type": "string",
+            "description": "Faks"
+          },
+          "adresEmail": {
+            "type": "string",
+            "description": "Adres email"
+          }
+        }
+      },
+      "InformacjeDotyczaceDokumentuIdentyfikacyjnegoDTO": {
+        "type": "object",
+        "properties": {
+          "oryginalDuplikatDokumentuIdentyfikacyjnegoDokumentZastepczyKoniowatego": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerDokumentuIdentyfikacyjnego": {
+            "type": "string",
+            "description": "Numer dokumentu identyfikacyjnego"
+          },
+          "dataWydaniaDokumentuIdentyfikacyjnego": {
+            "type": "string",
+            "description": "Data wydania dokumentu identyfikacyjnego",
+            "format": "date"
+          },
+          "nazwaWlasciwegoOrganuLubOrganuKtoryWydalDokumentIdentyfikacyjny": {
+            "type": "string",
+            "description": "Nazwa właściwego organu lub organu, który wydał dokument identyfikacyjny"
+          },
+          "adresWlasciwegoOrganuLubOrganuKtoryWydalDokumentIdentyfikacyjny": {
+            "type": "string",
+            "description": "Adres właściwego organu lub organu, który wydał dokument identyfikacyjny"
+          },
+          "przyczynaWydaniaNowegoDokumentuIdentyfikacyjnego": {
+            "type": "string",
+            "description": "Przyczyna wydania nowego unikalnego dożywotniego dokumentu identyfikacyjnego koniowatego"
+          },
+          "sposobOdbioruDokumentuIdentyfikacyjnego": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerDuplikatu": {
+            "type": "string",
+            "description": "Numer duplikatu"
+          },
+          "niepotwierdzony": {
+            "type": "boolean",
+            "description": "Niepotwierdzony"
+          },
+          "czyNowyWpis": {
+            "type": "boolean",
+            "writeOnly": true
+          },
+          "zrodloWpisu": {
+            "type": "string"
+          },
+          "idZdarzenia": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "czyZmodyfikowanePrzezUzytkownika": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "ZwierzetaZHKDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "description": "Liczba porządkowa",
+            "format": "int32"
+          },
+          "numerDzialalnosci": {
+            "type": "string",
+            "description": "Numer dzialalnosci"
+          },
+          "idKoniowatego": {
+            "type": "integer",
+            "description": "Identyfikator koniowatego",
+            "format": "int64"
+          },
+          "niepowtarzalnyDozywotniNumer": {
+            "type": "string",
+            "description": "Niepowtarzalny dożywotni numer UELN"
+          },
+          "dataUrodzenia": {
+            "type": "string",
+            "description": "Data urodzenia",
+            "format": "date"
+          },
+          "gatunek": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "imieNazwaKoniowatego": {
+            "type": "string",
+            "description": "Imię/Nazwa koniowatego"
+          },
+          "plec": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "masc": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "dataPrzybyciaDoDzialalnosci": {
+            "type": "string",
+            "description": "Data przybycia do działalności",
+            "format": "date"
+          },
+          "historiaZdarzen": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "wylaczenieZLancuchaZywnosciowego": {
+            "type": "string",
+            "description": "Podane leki / wyłączenie koniowatego z łańcucha żywnościowego"
+          },
+          "krajPochodzenia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "numerKodTranspondera": {
+            "type": "boolean",
+            "description": "Numer/kod transpondera"
+          },
+          "wojewodztwo": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "powiat": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "gmina": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "statusZwierzecia": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "aktualnyStatusEpizootyczny": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "zwierzeZaktualizowanePoKontroli": {
+            "type": "boolean",
+            "description": "Zwierze zaktualizowane po kontroli"
+          },
+          "poprzedniNumerIdentyfikacyjny": {
+            "type": "boolean",
+            "description": "Poprzedni numer identyfikacyjny"
+          },
+          "dataModyfikacjiBiznesowej": {
+            "type": "string",
+            "description": "Data modyfikacji biznesowej",
+            "format": "date-time"
+          },
+          "szczegolyZwierzeKoniowate": {
+            "$ref": "#/components/schemas/SzczegolyZwierzeKoniowateDTO"
+          },
+          "wlascicielKoniowategoSzczegoly": {
+            "$ref": "#/components/schemas/WlascicielKoniowategoSzczegolyDTO"
+          },
+          "wylaczenieKoniowategoZLancucha": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WylaczenieKoniowategoZLancuchaDTO"
+            }
+          },
+          "historiaKodowTranspondera": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoriaKodowTransponderaDTO"
+            }
+          },
+          "historiaNazwyKoniowatego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoriaNazwyKoniowategoDTO"
+            }
+          },
+          "znakiZatwierdzeniaZakladu": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZnakZatwierdzeniaZakladuDTO"
+            }
+          },
+          "licencjeKoniowatego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicencjaKoniowategoDTO"
+            }
+          },
+          "historiaWlascicieliKoniowatego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoriaWlascicieliKoniowategoDTO"
+            }
+          },
+          "informacjeDotyczaceDokumentuIdentyfikacyjnego": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformacjeDotyczaceDokumentuIdentyfikacyjnegoDTO"
+            }
+          }
+        },
+        "description": "Dane zwierzęcia"
+      },
+      "WlascicielKoniowategoSzczegolyDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numerWlascicielaKoniowatego": {
+            "type": "string"
+          },
+          "numerPosiadaczaEP": {
+            "type": "string"
+          },
+          "danePodmiotu": {
+            "$ref": "#/components/schemas/DanePodmiotuDTO"
+          },
+          "adres": {
+            "$ref": "#/components/schemas/AdresDTO"
+          },
+          "daneKontaktowe": {
+            "$ref": "#/components/schemas/DaneKontaktoweDTO"
+          }
+        }
+      },
+      "DanePodmiotuDTO": {
+        "type": "object",
+        "properties": {
+          "imieLubNazwaSkrocona": {
+            "type": "string"
+          },
+          "nazwiskoLubNazwa": {
+            "type": "string"
+          },
+          "pesel": {
+            "type": "string"
+          },
+          "nip": {
+            "type": "string"
+          },
+          "regon": {
+            "type": "string"
+          },
+          "numerPaszportuLubInnegoDokumentu": {
+            "type": "string"
+          }
+        }
+      },
+      "AdresDTO": {
+        "type": "object",
+        "properties": {
+          "kraj": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "wojewodztwo": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "powiat": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "gmina": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "miejscowosc": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "rodzajGminy": {
+            "type": "string"
+          },
+          "ulica": {
+            "type": "string"
+          },
+          "posesja": {
+            "type": "string"
+          },
+          "lokal": {
+            "type": "string"
+          },
+          "kodPocztowy": {
+            "type": "string"
+          },
+          "poczta": {
+            "type": "string"
+          }
+        }
+      },
+      "DaneKontaktoweDTO": {
+        "type": "object",
+        "properties": {
+          "telefonStacjonarny": {
+            "type": "string"
+          },
+          "telefonKomorkowy": {
+            "type": "string"
+          },
+          "telefonZagraniczny": {
+            "type": "string"
+          },
+          "fax": {
+            "type": "string"
+          },
+          "adresEmail": {
+            "type": "string"
+          }
+        }
+      },
+      "WylaczenieKoniowategoZLancuchaDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataWpisu": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataOd": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "dozywotnio": {
+            "type": "boolean"
+          },
+          "miejsceWpisu": {
+            "type": "string"
+          },
+          "numerLekarzaWeterynarii": {
+            "type": "string"
+          },
+          "imieNazwiskoLekarzaWeterynarii": {
+            "type": "string"
+          },
+          "nazwaOrganuKtoryDokonalWpisu": {
+            "type": "string"
+          },
+          "imieLubNazwaSkrocona": {
+            "type": "string"
+          },
+          "nazwiskoLubNazwa": {
+            "type": "string"
+          },
+          "pesel": {
+            "type": "string"
+          },
+          "nip": {
+            "type": "string"
+          },
+          "regon": {
+            "type": "string"
+          },
+          "numerPaszportuLubInnegoDokumentu": {
+            "type": "string"
+          },
+          "numerDokumentu": {
+            "type": "string"
+          },
+          "powodDokonaniaWpisu": {
+            "type": "string"
+          },
+          "wylaczenieKoniowategoZLancuchaKodZwiazku": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "wylaczenieKoniowategoZLancuchaOddzial": {
+            "$ref": "#/components/schemas/KodOpisWartosciDto"
+          },
+          "podaneLekiWylaczenieKoniowategoZLancuchaZywnosciowego": {
+            "type": "boolean"
+          },
+          "informacjaOPodanychLekachWylaczeniuKoniowategoZLancuchaZywnosciowego": {
+            "type": "string"
+          },
+          "zrodloWpisu": {
+            "type": "string"
+          },
+          "czyZmodyfikowanePrzezUzytkownika": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "HistoriaNazwyKoniowategoDTO": {
+        "type": "object",
+        "properties": {
+          "staraNazwaKoniowatego": {
+            "type": "string"
+          },
+          "nowaNazwaKoniowatego": {
+            "type": "string"
+          },
+          "idDokumentu": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numerDokumentuKancelaryjnego": {
+            "type": "string"
+          },
+          "dataZmiany": {
+            "type": "string",
+            "format": "date"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "HistoriaWlascicieliKoniowategoDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dataUmowyLubOswiadczenia": {
+            "type": "string",
+            "format": "date"
+          },
+          "czyUmowaOPrzeniesienieWlasnosci": {
+            "type": "boolean"
+          },
+          "numerWlasciciela": {
+            "type": "string"
+          },
+          "numerEPWlasciciela": {
+            "type": "string"
+          },
+          "peselWlasciciela": {
+            "type": "string"
+          },
+          "nip": {
+            "type": "string"
+          },
+          "regon": {
+            "type": "string"
+          },
+          "numerPaszportuLubInnegoDokumentu": {
+            "type": "string"
+          },
+          "imieNazwaSkrocona": {
+            "type": "string"
+          },
+          "nazwiskoNazwa": {
+            "type": "string"
+          },
+          "kraj": {
+            "type": "string"
+          },
+          "wojewodztwo": {
+            "type": "string"
+          },
+          "powiat": {
+            "type": "string"
+          },
+          "gmina": {
+            "type": "string"
+          },
+          "rodzajGminy": {
+            "type": "string"
+          },
+          "miejscowosc": {
+            "type": "string"
+          },
+          "ulica": {
+            "type": "string"
+          },
+          "posesja": {
+            "type": "string"
+          },
+          "lokal": {
+            "type": "string"
+          },
+          "kodPocztowy": {
+            "type": "string"
+          },
+          "poczta": {
+            "type": "string"
+          },
+          "telefonStacjonarny": {
+            "type": "string"
+          },
+          "telefonKomorkowy": {
+            "type": "string"
+          },
+          "telefonZagraniczny": {
+            "type": "string"
+          },
+          "faks": {
+            "type": "string"
+          },
+          "adresEmail": {
+            "type": "string"
+          },
+          "numerDokumentu": {
+            "type": "string"
+          },
+          "idDokumentu": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "zrodloWpisu": {
+            "type": "string",
+            "enum": [
+              "WNIOSEK",
+              "ZGLOSZENIE",
+              "IMPORT",
+              "API",
+              "MODYFIKACJA"
+            ]
+          }
+        }
+      },
+      "ZdarzenieKoniowateZHKApiDTO": {
+        "type": "object",
+        "properties": {
+          "lp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "niepowtarzalnyDozytowniNumer": {
+            "type": "string"
+          },
+          "typZdarzenia": {
+            "type": "string"
+          },
+          "stanZdarzenia": {
+            "type": "string"
+          },
+          "dataZdarzenia": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataWplywu": {
+            "type": "string",
+            "format": "date"
+          },
+          "numerDzialalnosciZglaszajacej": {
+            "type": "string"
+          },
+          "numerDzialalnosciKomplementarnej": {
+            "type": "string"
+          },
+          "numerDokumentu": {
+            "type": "string"
+          },
+          "lpGenerujacejPozycji": {
+            "type": "string"
+          },
+          "idTechniczneZwierzecia": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataModyfikacji": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bledy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BladWalidacjiZHKApiDTO"
+            }
+          }
+        },
+        "description": "Lista zdarzeń zwierząt koniowatych"
+      },
+      "BladWalidacjiZHKApiDTO": {
+        "type": "object",
+        "properties": {
+          "kodBledu": {
+            "type": "string"
+          },
+          "komunikat": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

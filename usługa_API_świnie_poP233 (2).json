@@ -1,0 +1,187 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "OpenAPI definition",
+		"version": "v0"
+	},
+	"servers": [
+		{
+			"url": "https://irz.arimr.gov.pl/api/grupowe",
+			"description": "Generated server url"
+		}
+	],
+	"paths": {
+		"/dokument/api/prod/ssss": {
+			"post": {
+				"tags": [
+					"zwierzeta-grupowe-api-prod-controller"
+				],
+				"operationId": "zlozDyspozycjeSSSS_1",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DyspozycjaSSSS"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ZlozenieDyspozycjiResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"DyspozycjaSSSS": {
+				"required": [
+					"numerProducenta",
+					"zgloszenie"
+				],
+				"type": "object",
+				"properties": {
+					"komorkaOrganizacyjna": {
+						"type": "string",
+						"description": "Komórka organizacyjna ARiMR, do której składana jest dyspozycja"
+					},
+					"numerProducenta": {
+						"type": "string",
+						"description": "Numer producenta, który składa dyspozycję"
+					},
+					"zgloszenie": {
+						"$ref": "#/components/schemas/ZgloszenieSSSSDTO"
+					}
+				}
+			},
+			"ZgloszenieSSSSDTO": {
+				"type": "object",
+				"properties": {
+					"pozycje": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BazowaPozycja"
+						}
+					},
+					"czyKorekta": {
+						"type": "boolean"
+					},
+					"typZdarzenia": {
+						"$ref": "#/components/schemas/KodOpisWartosciDto"
+					},
+					"numerDzialalnosci": {
+						"type": "string"
+					},
+					"liczbaSwinOznakowanych": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"liczbaSwinNieoznakowanych": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"liczbaSwin": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"technologiaProdukcji": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/KodOpisWartosciDto"
+						}
+					},
+					"systemUtrzymaniaSwin": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/KodOpisWartosciDto"
+						}
+					},
+					"dataZdarzenia": {
+						"type": "string",
+						"format": "date"
+					},
+					"numeryLochy": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/IdentyfikatorLochy"
+						}
+					}
+				}
+			},
+			"BazowaPozycja": {
+				"type": "object",
+				"properties": {
+					"lp": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"statusPozycji": {
+						"type": "string",
+						"enum": [
+							"ZATWIERDZONA",
+							"DO_ZATWIERDZENIA",
+							"POMINIETA"
+						]
+					}
+				}
+			},
+			"KodOpisWartosciDto": {
+				"type": "object",
+				"properties": {
+					"kod": {
+						"type": "string"
+					},
+					"opis": {
+						"type": "string"
+					}
+				}
+			},
+			"IdentyfikatorLochy": {
+				"type": "object",
+				"properties": {
+					"indywidualnyNumerIdentyfikacyjnyLochy": {
+						"type": "string"
+					}
+				}
+			},
+			"ZlozenieDyspozycjiResponse": {
+				"type": "object",
+				"properties": {
+					"komunikat": {
+						"type": "string"
+					},
+					"bledy": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BladWalidacjiDTO"
+						}
+					},
+					"numerDokumentu": {
+						"type": "string"
+					}
+				}
+			},
+			"BladWalidacjiDTO": {
+				"type": "object",
+				"properties": {
+					"kodBledu": {
+						"type": "string"
+					},
+					"komunikat": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}
